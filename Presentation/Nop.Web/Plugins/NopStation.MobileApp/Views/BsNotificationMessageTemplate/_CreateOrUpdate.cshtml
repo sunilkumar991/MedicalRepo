@@ -1,0 +1,28 @@
+﻿@using Nop.Core.Infrastructure
+@using BS.Plugin.NopStation.MobileApp.Models
+@using Nop.Services.Events
+@using Nop.Web.Framework.Events
+@using Nop.Web.Framework
+@model NotificationMessageTemplateModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="template-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.ContentManagement.MessageTemplates.Info")" asp-default="true">@await Html.PartialAsync("~/Plugins/NopStation.MobileApp/Views/BsNotificationMessageTemplate/_CreateOrUpdate.Info.cshtml", Model)</nop-tab>
+            <nop-tab asp-name="tab-stores" asp-title="@T("Admin.ContentManagement.MessageTemplates.Stores")" class="advanced-setting">@await Html.PartialAsync("~/Plugins/NopStation.MobileApp/Views/BsNotificationMessageTemplate/_CreateOrUpdate.Stores.cshtml", Model)</nop-tab>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "template-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

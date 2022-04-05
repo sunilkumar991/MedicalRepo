@@ -1,0 +1,7 @@
+﻿{  
+"OtherPayment": [ 
+{ "Name": "VISA", "PaymentNumber": "095959595959" ,  "LogoUrl": "https://onestop-kitchen.com/plugins/Payments.OtherPayment/VISA.png"},
+{ "Name": "MASTERCARD", "PaymentNumber": "095959595959", "LogoUrl": "https://onestop-kitchen.com/plugins/Payments.OtherPayment/MC.png" },
+{ "Name": "MPU", "PaymentNumber": "095959595959", "LogoUrl": "https://onestop-kitchen.com/plugins/Payments.OtherPayment/MPU.png" }
+]  
+}  

@@ -1,0 +1,111 @@
+﻿
+@using Nop.Core.Infrastructure
+@{Layout = "_AdminLayout";}
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Plugin.Misc.BsNotificaton.Group.List").Text;
+    Html.SetActiveMenuItemSystemName("Mobile Notification App Customer Groups");
+}
+
+<form asp-controller="BsNotificationAdmin" asp-action="DeviceList" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Plugin.Misc.BsNotificaton.Group.List.Header")
+        </h1>
+        <div class="pull-right">
+            <a asp-action="CreateGroup" class="btn bg-blue">
+                <i class="fa fa-plus-square"></i>
+                @T("Admin.Common.AddNew")
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="group-grid"></div>
+                            <script>
+                                $(document).ready(function () {
+                                    $("#group-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("GroupList", "BsNotificationAdmin", new { area = "Admin" }))",
+                                                    type: "POST",
+                                                    dataType: "json"
+
+                                                },
+                                                destroy: {
+                                                    url: "@Html.Raw(Url.Action("DeleteGroup", "BsNotificationAdmin", new { area = "Admin" }))",
+                                                    type: "POST",
+                                                    dataType: "json"
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors",
+
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: @(defaultGridPageSize),
+                                            serverPaging: true,
+                                            serverFiltering: true,
+                                            serverSorting: true
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: [@(gridPageSizes)]
+                                        },
+                                        editable: {
+                                            confirmation: true,
+                                            mode: "inline"
+                                        },
+                                        scrollable: false,
+                                        columns: [{
+                                            field: "Id",
+                                            title: "Group Id",
+                                            width: 30
+                                        },{
+                                            field: "Name",
+                                            title: "Name",
+                                            width:100,
+                                            template:'<a href="SmartGroup/#=Id#">#=Name#</a>'
+                                        }, {
+                                            field: "Query",
+                                            title: "Query",
+                                            width: 500,
+                                            headerAttributes: { style: "text-align:center" },
+
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Common.Edit")",
+                                            width: 100,
+                                            template: '<a class="btn btn-default" href="EditGroup/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                                        },{
+                                            field: "Id",
+                                            title: "@T("Admin.Common.Delete")",
+                                            width: 100,
+                                            template: '<a href="DeleteGroup/#=Id#">@T("Admin.Common.Delete")</a>'
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

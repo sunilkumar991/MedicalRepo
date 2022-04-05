@@ -1,0 +1,136 @@
+@model CityModel
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+<script>
+    $(document).ready(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                           // alert(option);
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
+                });
+        });
+    });
+
+</script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateCityDetailsTop, additionalData = Model })
+            <div id="errorDisplay">
+            </div>
+            <div class="panel panel-default panel-popup">
+
+                <div class="panel-body">
+                    @(Html.LocalizedEditor<CityModel, CityLocalizedModel>("state-localized",
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <nop-label asp-for="@Model.Locales[item].Name" />
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <nop-editor asp-for="@Model.Locales[item].Name" />
+                                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+,
+                                                @<div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-3">
+                                                            <nop-label asp-for="Name" />
+                                                        </div>
+                                                        <div class="col-sm-9">
+                                                            <nop-editor asp-for="Name" asp-required="true" />
+                                                            <span asp-validation-for="Name"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+))
+
+
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CountryId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" asp-required=true />
+                            <span asp-validation-for="CountryId"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="StateProvinceId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" asp-required=true />
+                            <span asp-validation-for="StateProvinceId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="ShippingCharge" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="ShippingCharge" />
+                            <span asp-validation-for="ShippingCharge"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="Abbreviation" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="Abbreviation" />
+                            <span asp-validation-for="Abbreviation"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="Published" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="Published" />
+                            <span asp-validation-for="Published"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="DisplayOrder" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateCityDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

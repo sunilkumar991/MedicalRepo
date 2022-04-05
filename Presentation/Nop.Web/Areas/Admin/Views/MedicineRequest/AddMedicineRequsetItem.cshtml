@@ -1,0 +1,315 @@
+﻿@model MedicineRequestItemModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Medicine.AddMedicineRequsetItem").Text;
+}
+<style>
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+    /* The heart of the matter */
+    .testimonial-group > .row {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .testimonial-group > .row > .col-xs-4 {
+            display: inline-block;
+            float: none;
+    }
+    /* Decorations */
+    .col-xs-4 {
+        color: #fff;
+        font-size: 48px;
+        padding-bottom: 20px;
+        padding-top: 18px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+</style>
+<nop-antiforgery-token />
+<form id="medicinerequestitem-form">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsTop, additionalData = Model })
+    <div>
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Medicine.AddMedicineRequsetItem") - @Context.Request.Query["medicineRequestId"]
+                <small>
+                    <i class="fa fa-arrow-circle-left"></i>
+                    <a asp-controller="MedicineRequest" asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.Medicine.MedicineRequestItem.BackToList")</a>
+                </small>
+            </h1>
+        </div>
+
+        <div class="content">
+            <div class="form-horizontal">
+                <div class="panel-group">
+                    <div id="errorDisplay">
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="panel panel-default" style="margin: auto;width:auto;border: 3px solid #3c8dbc;padding: 10px;">
+                                <div class="container testimonial-group">
+                                    <div class="row text-center">
+                                        @{
+                                            var values = @ViewData["ImageUrl"].ToString().Split(',');
+                                            foreach (var item in values)
+                                            {
+                                                if (!string.IsNullOrEmpty(item.ToString()))
+                                                {
+                                                    <div class="col-xs-4">
+                                                        <img src="@item.ToString()" />
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- panel input boxes -->
+                            <div class="panel-body">
+                                <table id="myTable" class="table order-list">
+                                    <thead>
+                                        <tr>
+                                            <td><b>MedicineName</b></td>
+                                            <td><b>Quantity</b></td>
+                                            <td><b>UnitPrice</b></td>
+                                            <td><b>Product</b></td>
+                                            <td><b>IsAvailable</b></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Html.EditorFor(modelItem => modelItem.MedicineName, new { htmlAttributes = new { @class = "form-control" } })</td>
+                                            <td><input type="number" min="0" name="quantity" id="quantity" class="form-control"></td>
+                                            <td><input type="number" min="0" name="unitPrice" id="unitPrice" class="form-control"></td>
+                                            @{
+                                                List<SelectListItem> MedilistItems = new List<SelectListItem>();
+                                                foreach (var items in Model.AvailableMedicineProduct)
+                                                {
+                                                    MedilistItems.Add(new SelectListItem
+                                                    {
+                                                        Text = items.Text,
+                                                        Value = items.Value,
+                                                    });
+                                                }
+                                                var dropdown = Html.DropDownList("dropdown_", new SelectList(MedilistItems, "Value", "Text"), new { @class = "form-control" });
+                                            }
+                                            <td>@dropdown</td>
+                                            <td><input type="checkbox" name="IsAvailable" id="IsAvailable" value="Bike"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" style="text-align: left;">
+                                                <input type="button" class="btn btn-secondary" id="addrow" value="Add Row" />
+                                            </td>
+                                            <td colspan="3" style="text-align: right;"><input type="button" class="btn btn-primary" id="add" value="Add Medicine Items"></td>
+                                        </tr>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                            <!-- panel input boxes -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsBottom, additionalData = Model })
+</form>
+
+<script>
+    function clearHtml() {
+        $("#MedicineName").val('');
+        $("#quantity").val("0");
+        $("#unitPrice").val("0.00");
+        $("#dropdown_").val("0");
+        $("#IsAvailable").removeAttr('checked');
+        $("#MedicineName").css('border-color', '');
+        $("#quantity").css('border-color', '');
+        $("#unitPrice").css('border-color', '');
+    }
+
+    $(document).ready(function () {
+        $("#MedicineName").val('');
+        $("#quantity").val("0");
+        $("#unitPrice").val("0.00");
+        $("#dropdown_").val("0");
+        $("#IsAvailable").removeAttr('checked');
+
+        var counter = 0;
+         $("#addrow").on("click", function () {
+                var newRow = $("<tr  id=" + counter +"_rows>");
+                var cols = "";
+                cols += `<td>@Html.EditorFor(modelItem => modelItem.MedicineName, new { htmlAttributes = new { @class = "form-control" } })</td>`;
+                cols += '<td><input type="number" min="0" name="quantity" value="0" id="quantity" class="form-control"></td>';
+                cols += '<td><input type="number" min="0" name="unitPrice" value="0.00" id="unitPrice" step="any" class="form-control"></td>';
+                @{
+                    List<SelectListItem> listItems = new List<SelectListItem>();
+                    foreach (var items in Model.AvailableMedicineProduct)
+                    {
+                        listItems.Add(new SelectListItem
+                        {
+                            Text = items.Text,
+                            Value = items.Value,
+                        });
+                    }
+                    var dropdown2 = Html.DropDownList("dropdown_", new SelectList(listItems, "Value", "Text"), new { @class = "form-control" });
+                   }
+                cols += `<td>@dropdown2</td>`;
+                cols += '<td><input type="checkbox" name="IsAvailable" id="IsAvailable" value="IsAvailable"></td>';
+                cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+                newRow.append(cols);
+                $("table.order-list").append(newRow);
+                counter++;
+            });
+
+        $("#add").on("click", function () {
+                var medicineName = $('#MedicineName').val().trim();
+                var quantity = $('#quantity').val();
+                var unitPrice = $('#unitPrice').val();
+                if (medicineName == "")
+                {
+                    $('#MedicineName').css('border-color', 'red');
+                    $('#MedicineName').focus();
+                }
+                else
+                {
+                    $('#MedicineName').css('border-color', '');
+                }
+                if (quantity == "") {
+                    $('#quantity').css('border-color', 'red');
+                    $('#quantity').focus();
+                }
+                else
+                {
+                    $('#quantity').css('border-color', '');
+                }
+                if (unitPrice == "") {
+                    $('#unitPrice').css('border-color', 'red');
+                    $('#unitPrice').focus();
+                }
+                else
+                {
+                    $('#unitPrice').css('border-color', '');
+                }
+            var data = [];
+            $('tbody tr').each(function () {
+                var medicineName = $(this).find('#MedicineName').val().trim();
+                var quantity = $(this).find('#quantity').val();
+                var unitPrice = $(this).find('#unitPrice').val();
+                var productId = $(this).find('#dropdown_').val().trim();
+                var available = false;
+
+                if (medicineName != "" && quantity != 0 && unitPrice != 0 && productId != null && !(isNaN(quantity)) && !(isNaN(unitPrice))) {
+                    if ($('#IsAvailable').is(":checked"))
+                    {
+                        available = true;
+                    }
+                    else
+                    {
+                        available = false;
+                    }
+                    $(this).closest('tr').find('#MedicineName').css('border-color', '');
+                    $(this).closest('tr').find('#quantity').css('border-color', '');
+                    $(this).closest('tr').find('#unitPrice').css('border-color', '');
+
+                    var alldata = {
+                        MedicineName: medicineName,
+                        Quantity: quantity,
+                        MedicineRequestID: @Model.Id,
+                        UnitPrice: unitPrice,
+                        ProductID: productId,
+                        IsAvailable: available
+                    };
+                    data.push(alldata);
+                }
+                else {
+                    if (medicineName.trim() == "")
+                    {
+                        $(this).closest('tr').find('#MedicineName').css('border-color', 'red');
+                        $(this).closest('tr').find('#MedicineName').focus();
+                    }
+                    else
+                    {
+                        $(this).closest('tr').find('#MedicineName').css('border-color', '');
+                    }
+                    if (quantity == 0)
+                    {
+                        $(this).closest('tr').find('#quantity').css('border-color', 'red');
+                        $(this).closest('tr').find('#quantity').focus();
+                    }
+                    else
+                    {
+                        $(this).closest('tr').find('#quantity').css('border-color', '');
+                    }
+                    if (unitPrice == 0) {
+                        $(this).closest('tr').find('#unitPrice').css('border-color', 'red');
+                        $(this).closest('tr').find('#unitPrice').focus();
+                    }
+                    else
+                    {
+                        $(this).closest('tr').find('#unitPrice').css('border-color', '');
+                    }
+                    data = [];
+                    return false;
+                }
+
+            });
+           
+            if (data != null && data != "") {
+                alldata = { 'alldata': data };
+                addAntiForgeryToken(alldata);
+                var submitAction = confirm("Are you want to submit!");
+                if (submitAction) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@(Url.Action("MedicineRequestItemAdd", "MedicineRequest"))",
+                        data: alldata,
+                        success: function (data) {
+                            if (data.Error) {
+                                alert(data.Error);
+                            }
+                            if (data.Result) {
+                                $("#errorDisplay").empty();
+                                alert("Medicine Request Item Added Successfully.");
+                                for (var i = 0; i < counter; i++) {
+                                    $('#' + i + '_rows').remove();
+                                    $('table#myTable tr#' + i + '_rows').remove();
+                                }
+                                clearHtml();
+                            }
+                            else {
+                                alert('Failed To Add Medicine Request Item.');
+                            }
+                        },
+                        failure: function (response) {
+                            alert('Failed To Add Medicine Request Item.');
+                        }
+
+                    });
+                }
+            }
+            else
+            {
+                alert('Fill the Medicine Request Item Data');
+                $('#addMedicineRequestItem').attr('disabled', false);
+            }
+            });
+
+            $("table.order-list").on("click", ".ibtnDel", function (event) {
+                $(this).closest("tr").remove();
+                counter -= 1
+            });
+       });
+</script>

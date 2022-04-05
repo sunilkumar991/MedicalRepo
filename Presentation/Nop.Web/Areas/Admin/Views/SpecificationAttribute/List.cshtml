@@ -1,0 +1,145 @@
+@model SpecificationAttributeSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Specification attributes");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.Attributes.SpecificationAttributes")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchSpecificationAttribute" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchSpecificationAttribute" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-categories" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
+                    </p>
+                    <div id="specificationattributes-grid"></div>
+                    <script>
+                    $(document).ready(function() {
+                        $("#specificationattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("List", "SpecificationAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                       data: function() {
+                                                var data = {
+                                                    SearchSpecificationAttribute: $('#@Html.IdFor(model => model.SearchSpecificationAttribute)').val()
+
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(Model.PageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(Model.AvailablePageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
+                                    width: 100
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 80,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
+                            ]
+                        });
+                    });
+                    </script>
+                    <script>
+                        $(document).ready(function() {
+                            //search button
+                            $('#search-categories').click(function() {
+                                //search
+                                var grid = $('#specificationattributes-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+
+                            $("#@Html.IdFor(model => model.SearchSpecificationAttribute)").keydown(function(event) {
+                                if (event.keyCode == 13) {
+                                    $("#search-categories").click();
+                                    return false;
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>

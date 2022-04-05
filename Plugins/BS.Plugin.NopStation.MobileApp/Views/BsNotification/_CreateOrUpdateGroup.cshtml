@@ -1,0 +1,139 @@
+﻿@using BS.Plugin.NopStation.MobileApp.Helpers
+@model BS.Plugin.NopStation.MobileApp.Models.CriteriaModel
+@using Nop.Web.Framework
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="Query" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Columns" />
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            @Html.DropDownListFor(model => model.Columns, ComboList.ColumnList, new { @class = "form-control" })
+                            <span asp-validation-for="Columns"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="KeyWord" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="KeyWord" />
+                            <span asp-validation-for="KeyWord"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AndOr" />
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            @Html.DropDownListFor(model => model.AndOr, ComboList.AndOrList, new { @class = "form-control" })
+                            <span asp-validation-for="AndOr"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+	/*$(document).ready(function() {
+		$("#Columns").change(function () {
+			var selectedItem = $(this).val().split(".")[1];
+			if (selectedItem.indexOf("Date") !== -1 || selectedItem === "Created on") {
+				$(this).parent().find("#KeyWord").datepicker();
+			}
+			else {
+				$(this).parent().find("#KeyWord").datepicker("destroy");
+			}
+		});
+	});*/
+
+	$("#criteria-holder").cloneObject({ 'data': '@Model.Query' });
+
+
+	function GenerateModelData() {
+		var tables, filterKey, conditions, keyWord, adnOr, query;
+
+		tables = $.map($(".criteria-holder").find('#Columns'), function (elem, index) {
+			if (index < $(".criteria-holder").length - 1) {
+				return $(elem).val().split(".")[0];
+			}
+		}).join(",");
+
+		var temp = [];
+		$.each(tables.split(","), function (i, el) {
+			if ($.inArray(el, temp) === -1) {
+				temp.push(el);
+			}
+		});
+
+		tables = temp.join(",");
+
+		filterKey = $.map($(".criteria-holder").find('#Columns'), function (elem, index) {
+			if (index < $(".criteria-holder").length-1) {
+				return $(elem).val(); //.split(".")[1];
+			}
+		}).join(",");
+
+		conditions = $.map($(".criteria-holder").find('#Conditions'), function (elem, index) {
+			if (index < $(".criteria-holder").length - 1) {
+				return $(elem).val();
+			}
+		}).join(",");
+
+		keyWord = $.map($(".criteria-holder").find('#KeyWord'), function (elem, index) {
+			if (index < $(".criteria-holder").length - 1) {
+				return $(elem).val();
+			}
+		}).join(",");
+
+		adnOr = $.map($(".criteria-holder").find('#AndOr'), function (elem, index) {
+			if (index < $(".criteria-holder").length - 2) {
+				return $(elem).val();
+			}
+		}).join(",");
+
+		query = $.map($(".criteria-holder"), function (elem, index) {
+			if (index < $(".criteria-holder").length - 1) {
+			    var keyWord = ($(elem).find("#KeyWord").is(":visible")) ? $(elem).find("#KeyWord").val() : $(elem).find(".date").val();
+
+			    return $(elem).find("#Columns").val() + "^" + $(elem).find("#Conditions").val() + "^" + keyWord + "^" + $(elem).find("#AndOr").val(); //.split("^")[1]
+			}
+		}).join(",");
+
+		$('#@Html.IdFor(model => model.Columns)').val(filterKey);
+	    $('#@Html.IdFor(model => model.Conditions)').val(filterKey);
+	    $('#@Html.IdFor(model => model.KeyWord)').val(keyWord);
+	    $('#@Html.IdFor(model => model.AndOr)').val(adnOr);
+	    $('#@Html.IdFor(model => model.Query)').val(query);
+		var model = {
+			 Id: $('#@Html.IdFor(model => model.Id)').val(),
+		     Name:  $('#@Html.IdFor(model => model.Name)').val(),
+			Columns: filterKey,
+			Conditions: conditions,
+			KeyWord: keyWord,
+			AndOr: adnOr,
+			Query: query
+		};
+	    $(form).submit();
+	}
+</script>

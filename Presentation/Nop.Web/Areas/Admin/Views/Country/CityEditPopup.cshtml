@@ -1,0 +1,87 @@
+@model CityModel
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Countries.States.Cities.EditCityDetails").Text;
+}
+
+<form asp-controller="Country" asp-action="CityEditPopup"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]" id="city-form">
+    <script>
+        $(document).ready(function () {
+        $("#save").click(function () {
+            $("#errorDisplay").empty();
+           var valId=$("#@Html.IdFor(model => model.Id)").val().trim();
+           var valCountry = $("#@Html.IdFor(model => model.CountryId)").val().trim();
+           var valState = $("#@Html.IdFor(model => model.StateProvinceId)").val().trim();
+           var valName = $("#@Html.IdFor(model => model.Name)").val().trim();
+
+           var valShippingCharge = $("#@Html.IdFor(model => model.ShippingCharge)").val().trim();
+           var valPublished = $("#@Html.IdFor(model => model.Published)").val().trim();
+           var valDisplayOrder = $("#@Html.IdFor(model => model.DisplayOrder)").val().trim();
+           var valAbbreviation = $("#@Html.IdFor(model => model.Abbreviation)").val().trim();
+
+
+            if (valCountry != 0 && valState != 0 && valName != "")
+            {
+               $("#errorDisplay").empty();
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetCityByCityNameAndStateIdForEdit", "Country"))",
+                    data: { "Id": valId,"cityName": valName, "stateId": valState, "shippingCharge": valShippingCharge, "published": valPublished, "displayOrder": valDisplayOrder, "abbreviation": valAbbreviation},
+                    success: function (data) {
+                        if (data==1) {
+                            $("#city-form").submit();
+                        }
+                        else if (data == 2) {
+                            $("#errorDisplay").append('<div class="validation-summary-errors" data-valmsg-summary="true"><ul><li>City Name already exists in the State</li></ul></div>');
+                            return false;
+                        }
+                        else
+                        {
+                            $("#city-form").submit();
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Data.');
+                    }
+                });
+
+            }
+            else if (valName == "")
+            {
+                                $("#errorDisplay").append('<div class="validation-summary-errors" data-valmsg-summary="true"><ul><li>Please Enter the Name.</li></ul></div>');
+                                return false;
+            }
+            else if (valCountry == 0) {
+                                $("#errorDisplay").append('<div class="validation-summary-errors" data-valmsg-summary="true"><ul><li>Please Select the Country.</li></ul></div>');
+                                return false;
+            }
+            else if (valState == 0) {
+                                $("#errorDisplay").append('<div class="validation-summary-errors" data-valmsg-summary="true"><ul><li>Please Select the State.</li></ul></div>');
+                                return false;
+             }
+       });
+
+    });
+    </script>
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Countries.States.Cities.EditCityDetails")
+        </h1>
+
+        <div class="pull-right">
+            <button id="save" type="button" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateCity", Model)
+</form>

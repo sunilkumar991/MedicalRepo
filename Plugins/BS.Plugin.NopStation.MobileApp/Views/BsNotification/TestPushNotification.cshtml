@@ -1,0 +1,89 @@
+﻿@model BS.Plugin.NopStation.MobileApp.Models.QueuedNotificationModel
+@using System.Configuration
+@using System.Web;
+
+@using System.Collections.Generic;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using BS.Plugin.NopStation.MobileApp.Domain;
+
+@{
+    ViewBag.Title = T("Admin.Plugin.Misc.BsNotificaton.Test.Push").Text;
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("Mobile Notification App Test Push");
+}
+
+<div asp-validation-summary="All"></div>
+
+<form asp-controller="BsNotificationAdmin" asp-action="TestPushNotification" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Plugin.Misc.BsNotificaton.Test.Push")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DeviceTypeId" />
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                @Html.DropDownListFor(model => model.DeviceTypeId, ((DeviceType)Model.DeviceTypeId).ToSelectList(), new { @class = "form-control" })
+                                <span asp-validation-for="DeviceTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SubscriptionId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SubscriptionId" />
+                                <span asp-validation-for="SubscriptionId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="NotificationTypeId" />
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                @Html.DropDownListFor(model => model.NotificationTypeId, ((NotificationType)Model.NotificationTypeId).ToSelectList(), new { @class = "form-control" })
+                                <span asp-validation-for="NotificationTypeId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Message" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="Message" />
+                                <span asp-validation-for="Message"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ItemId" />
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <nop-editor asp-for="ItemId" />
+                                <span asp-validation-for="ItemId"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <input type="submit" name="save" class="btn bg-blue" value="Send" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

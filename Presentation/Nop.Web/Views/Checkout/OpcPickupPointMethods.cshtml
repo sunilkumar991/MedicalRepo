@@ -1,0 +1,37 @@
+﻿@model CheckoutNewPickupPointModel
+<div class="checkout-data">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPickupPointMethodTop })
+    <div class="section pickuppoint-method">
+        @if (Model.PickupPointMethods.Count > 0)
+        {
+            <input id="IsDeliveryAllowed" type="hidden" name="IsDeliveryAllowed" value="@(Model.IsDeliveryAllowed)" />
+            <ul class="method-list" id="pickup-point-method-block">
+                @for (var i = 0; i < Model.PickupPointMethods.Count; i++)
+                {
+                    var pickupPointMethod = Model.PickupPointMethods[i];
+                    var pickupPointMethodName = pickupPointMethod.Name;
+                    <li>
+                        <div class="method-name">
+                            <div class="pickuppoint-details">
+                                <input id="pickuppointmethod_@(i)" type="radio" name="pickuppointmethod" value="@(pickupPointMethod.Id)" checked="@pickupPointMethod.Selected" />
+                                <label for="pickuppointmethod_@(i)">@pickupPointMethodName</label>
+                                @if (!string.IsNullOrEmpty(pickupPointMethod.Description))
+                                {
+                                    <div class="pickuppoint-description">@pickupPointMethod.Description</div>
+                                    <div class="pickuppoint-description">@pickupPointMethod.OpeningHours</div>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="message-error">
+                @T("Checkout.NoPickupPoints")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPickupPointMethodBottom })
+</div>

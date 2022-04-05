@@ -1,0 +1,85 @@
+﻿@using Nop.Core.Infrastructure
+@model BS.Plugin.NopStation.MobileApp.Models.ConfigurationModel
+@using BS.Plugin.NopStation.MobileApp.Models;
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Plugin.Misc.BsNotificaton.Configure").Text;
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("Mobile Notification App Configure");
+}
+
+<form asp-controller="BsNotificationAdmin" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Plugin.Misc.BsNotificaton.Configure")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" class="btn bg-blue" name="save">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AppleCertFileNameWithPath" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AppleCertFileNameWithPath" />
+                                <span asp-validation-for="AppleCertFileNameWithPath"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApplePassword" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ApplePassword" />
+                                <span asp-validation-for="ApplePassword"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsAppleProductionMode" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsAppleProductionMode" />
+                                <span asp-validation-for="IsAppleProductionMode"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoogleProject_Number" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoogleProject_Number" />
+                                <span asp-validation-for="GoogleProject_Number"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoogleConsoleAPIAccess_KEY" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoogleConsoleAPIAccess_KEY" />
+                                <span asp-validation-for="GoogleConsoleAPIAccess_KEY"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

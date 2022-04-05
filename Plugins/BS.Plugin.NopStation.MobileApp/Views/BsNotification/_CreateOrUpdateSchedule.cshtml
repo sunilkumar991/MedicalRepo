@@ -1,0 +1,109 @@
+﻿@using BS.Plugin.NopStation.MobileApp.Helpers
+@model BS.Plugin.NopStation.MobileApp.Models.ScheduledNotificationModel
+@using Nop.Web.Framework
+@using BS.Plugin.NopStation.MobileApp.Domain;
+
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="QueuedCount" type="hidden" />
+<input asp-for="IsQueued" type="hidden" />
+<input asp-for="ErrorLog" type="hidden" />
+<input asp-for="CreatedOnUtc" type="hidden" />
+
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="GroupId" />
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.GroupId, Model.AvailableGroups, new { @class = "form-control" })
+                            <span asp-validation-for="GroupId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="NotificationTypeId" />
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.NotificationTypeId, ((NotificationType)Model.NotificationTypeId).ToSelectList(), new { @class = "form-control" })
+                            <span asp-validation-for="NotificationTypeId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="NotificationMessageTemplateId" />
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.NotificationMessageTemplateId, Model.AvailableMessageTemplates, new { @class = "form-control" })
+                            <span asp-validation-for="NotificationMessageTemplateId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Priority" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Priority" />
+                            <span asp-validation-for="Priority"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SendingWillStartOnUtc" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SendingWillStartOnUtc" />
+                            <span asp-validation-for="SendingWillStartOnUtc"></span>
+                        </div>
+                    </div>
+
+                    @if (Model.Id > 0)
+    {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CreatedOnUtc" />
+                    </div>
+                    <div class="col-md-9">
+                        @Model.CreatedOnUtc.ToString("D")
+                    </div>
+                </div>
+}
+
+                    <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "BsNotificationAdmin", new { scheduleId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form", area = "" }))', 800, 800, true); return false;" class="k-button" />
+                    <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "BsNotificationAdmin", new { scheduleId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form", area = "" }))', 800, 800, true); return false;" class="k-button" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.NotificationTypeId)").change(toggleDiscountType);
+
+                            toggleDiscountType();
+                        });
+
+                        function toggleDiscountType() {
+                            var selectedDiscountTypeId = $("#@Html.IdFor(model => model.NotificationTypeId)").val();
+                            var id= @Model.Id;
+                            if (id >0 && selectedDiscountTypeId == @(((int)NotificationType.PromotionProduct).ToString())) {
+                                    $('#btnAddNewProduct').show();
+                                    $('#btnAddNewCategory').hide();
+                            }
+                            else if (id >0 && selectedDiscountTypeId == @(((int)NotificationType.PromotionCategory).ToString())) {
+                                $('#btnAddNewProduct').hide();
+                                $('#btnAddNewCategory').show();
+
+                            } else {
+                                $('#btnAddNewProduct').hide();
+                                $('#btnAddNewCategory').hide();
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

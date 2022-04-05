@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "_ColumnsOne";
+
+    Html.AppendCssFileParts("~/Themes/Pavilion/Content/css/owl.carousel.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Pavilion/Content/scripts/owl.carousel.min.js");
+	
+    //page class
+    Html.AppendPageCssClassParts("html-home-page");
+}
+
+<div class="page home-page">
+    <div class="page-body">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageTop })
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBeforeCategories })
+        @await Component.InvokeAsync("HomepageCategories")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBeforeProducts })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBeforeBestSellers })
+
+        <div class="homepage-middle-wrapper">
+		    @await Component.InvokeAsync("HomepageBestSellers")
+		    @await Component.InvokeAsync("Widget", new { widgetZone = "pavilion_home_page_richblog" })
+        </div>
+
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBeforeNews })
+        @await Component.InvokeAsync("HomepageNews")*@
+        @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBeforePoll })
+        @await Component.InvokeAsync("HomepagePolls")*@
+
+        <div class="homepage-bottom-wrapper">
+        	@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageBottom })
+        </div>
+
+    </div>
+</div>

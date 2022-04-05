@@ -1,0 +1,101 @@
+﻿@using Nop.Core.Infrastructure
+@{Layout = "_AdminLayout";}
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Plugin.Misc.BsNotificaton.Group.List").Text;
+
+}
+
+<form asp-controller="BsNotificationAdmin" asp-action="DeviceList" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Plugin.Misc.BsNotificaton.Group.List.Header")
+        </h1>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div id="SmartGroupList-grid"></div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $("#SmartGroupList-grid").kendoGrid({
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("SmartGroupList", "BsNotificationAdmin", new { smartGroupId = ViewBag.SmartGroupId, area = "Admin" }))",
+                                                    type: "POST",
+                                                    dataType: "json"
+                                                }
+                                            },
+                                            schema: {
+                                                data: "Data",
+                                                total: "Total",
+                                                errors: "Errors",
+
+                                            },
+                                            error: function(e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            },
+                                            pageSize: @(defaultGridPageSize),
+                                            serverPaging: true,
+                                            serverFiltering: true,
+                                            serverSorting: true
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: [@(gridPageSizes)]
+                                        },
+                                        editable: {
+                                            confirmation: false,
+                                            mode: "inline"
+                                        },
+                                        scrollable: false,
+                                        columns: [{
+                                            field: "CustomerId",
+                                            title: "Customer Id",
+                                            width: 30
+                                        },{
+                                            field: "FullName",
+                                            title: "Full Name",
+                                            width: 100,
+                                        },{
+                                            field: "UserName",
+                                            title: "UserName",
+                                            width: 100,
+                                        }, {
+                                            field: "Email",
+                                            title: "Email",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+
+                                        },  {
+                                            field: "CreatedOnUtc",
+                                            title: "Created On",
+                                            width: 200,
+                                            type: "date",
+                                            format: "{0:G}",
+                                            headerAttributes: { style: "text-align:center" },
+
+                                        }]
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

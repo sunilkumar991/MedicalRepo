@@ -1,0 +1,215 @@
+﻿
+@model PaymentTransactionHistorySearchModel
+@using Nop.Services.Stores
+@inject IStoreService storeService
+@{
+    var stores = storeService.GetAllStores();
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.PaymentTransactionHistory").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Payment Transaction History");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.PaymentTransactionHistory")
+    </h1>
+
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="PaymentMethodId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="PaymentMethodId" asp-items="Model.AvailablePaymentMethod" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="TransactionStatusId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="TransactionStatusId" asp-items="Model.AvailableTransactionStatus" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="TransactionId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="TransactionId" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnFrom" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnFrom" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnTo" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnTo" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="productreviews-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#productreviews-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "PaymentTransactionHistory"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                CustomerId: $('#@Html.IdFor(model => model.CustomerId)').val(),
+                                                TransactionId: $('#@Html.IdFor(model => model.TransactionId)').val(),
+                                                TransactionStatusId: $('#@Html.IdFor(model => model.TransactionStatusId)').val(),
+                                                PaymentMethodId: $('#@Html.IdFor(model => model.PaymentMethodId)').val(),
+                                                TransactionAmount: $('#@Html.IdFor(model => model.TransactionAmount)').val(),
+                                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                columns: [
+                                        {
+                                            field: "CustomerName",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.CustomerName")",
+                                            width: 200
+                                        },
+                                        {
+                                             field: "PaymentMethod",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.PaymentMethod")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "TransactionId",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.TransactionId")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "TransactionMessage",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.TransactionMessage")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "TransactionAmount",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.TransactionAmount")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "IsTransactionSuccess",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.IsTransactionSuccess")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "IssueStatus",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.IssueStatus")",
+                                            width: 150
+                                        },
+                                        {
+                                             field: "UpdatedBy",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.UpdatedBy")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "Comments",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.Comments")",
+                                            width: 200
+                                        },
+                                        {
+                                            field: "CreatedOnUtc",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.CreatedOnUtc")",
+                                            width: 150,
+                                            type: "date",
+                                            format: "{0:G}"
+                                        },
+                                          {
+                                            field: "UpdatedOnUtc",
+                                            title: "@T("Admin.PaymentTransactionHistory.Fields.UpdatedOnUtc")",
+                                            width: 150,
+                                            type: "date",
+                                            format: "{0:G}"
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                    <script>
+                        $(document).ready(function () {
+                            //search button
+                            $('#search-productreviews').click(function () {
+                                //search
+                                var grid = $('#productreviews-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+

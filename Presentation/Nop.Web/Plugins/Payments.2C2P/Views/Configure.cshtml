@@ -1,0 +1,119 @@
+﻿@model Nop.Plugin.Payments._2C2P.Models.ConfigurationModel
+@inject Nop.Core.IWebHelper webHelper
+@{
+    Layout = "_ConfigurePlugin";
+}
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+
+<form asp-controller="Payment2C2P" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Version_OverrideForStore" asp-input="Version" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Version" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Version" />
+                        <span asp-validation-for="Version"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MerchantId_OverrideForStore" asp-input="MerchantId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MerchantId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MerchantId" />
+                        <span asp-validation-for="MerchantId"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="SecretKey_OverrideForStore" asp-input="SecretKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="SecretKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SecretKey" />
+                        <span asp-validation-for="SecretKey"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ResultUrl_OverrideForStore" asp-input="ResultUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ResultUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ResultUrl" />
+                        <span asp-validation-for="ResultUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Currency_OverrideForStore" asp-input="Currency" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Currency" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Currency" />
+                        <span asp-validation-for="Currency"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PrivatePfxFilePath_OverrideForStore" asp-input="PrivatePfxFilePath" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PrivatePfxFilePath" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PrivatePfxFilePath" />
+                        <span asp-validation-for="PrivatePfxFilePath"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PrivatePfxFilePassword_OverrideForStore" asp-input="PrivatePfxFilePassword" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PrivatePfxFilePassword" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PrivatePfxFilePassword" />
+                        <span asp-validation-for="PrivatePfxFilePassword"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="RedirectAndPostDataURL_OverrideForStore" asp-input="RedirectAndPostDataURL" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="RedirectAndPostDataURL" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="RedirectAndPostDataURL" />
+                        <span asp-validation-for="RedirectAndPostDataURL"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

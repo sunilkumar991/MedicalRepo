@@ -1,0 +1,37 @@
+﻿@using BS.Plugin.NopStation.MobileApp.Helpers
+@model BS.Plugin.NopStation.MobileApp.Models.ScheduledNotificationModel
+@using Nop.Web.Framework
+@{Layout = "_AdminLayout";}
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Plugin.NopStation.MobileApp.Schedule.Title.EditSchedule").Text;
+    Html.SetActiveMenuItemSystemName("Mobile Notification App Schedules");
+}
+
+
+<form asp-controller="BsNotificationAdmin" asp-action="EditSchedule" method="post">
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Plugin.NopStation.MobileApp.Schedule.Header.EditSchedule")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Schedule" asp-controller="BsNotificationAdmin" asp-area="Admin">@T("Admin.Plugin.NopStation.MobileApp.Common.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/NopStation.MobileApp/Views/BsNotification/_CreateOrUpdateSchedule.cshtml", Model)
+</form>
+
+
+

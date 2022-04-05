@@ -1,0 +1,273 @@
+﻿@model IEnumerable<MedicineRequestItemModel>
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Domain.Catalog;
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsTop, additionalData = Model })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (Model.Count() > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-12" style="overflow-x: auto;">
+                        @foreach (var item in Model)
+                        {
+                            <script>
+                            $(document).ready(function () {
+                                toggleOrderItemEdit@(item.Id)(false);
+                                $('#dropdown_@item.Id').val(@item.ProductID);
+                              
+                            });
+                            </script>
+
+                            <script>
+                                function toggleOrderItemEdit@(item.Id)(editMode) {
+                                if (editMode) {
+                                    $('#pnlEditPvUnitPrice@(item.Id)').show();
+                                    $('#item_@item.Id').show();
+                                    $('#pnlEditPvQuantity@(item.Id)').show();
+                                    $('#pnlEditPvDiscount@(item.Id)').show();
+                                    $('#pnlEditPvPrice@(item.Id)').show();
+                                    $('#pnlEditIsAvailable@(item.Id)').show();
+                                    $('#btnEditOrderItem@(item.Id)').hide();
+                                    $('#btnDeleteMedicineRequestItem@(item.Id)').hide();
+                                    $('#btnSaveMedicineRequestItem@(item.Id)').show();
+                                    $('#btnCancelOrderItem@(item.Id)').show();
+                                     }
+                                else {
+                                    $('#pnlEditPvUnitPrice@(item.Id)').hide();
+                                    $('@("item_"+item.Id)').hide();
+                                    $('#pnlEditPvQuantity@(item.Id)').hide();
+                                    $('#pnlEditPvDiscount@(item.Id)').hide();
+                                    $('#pnlEditPvPrice@(item.Id)').hide();
+                                    $('#pnlEditIsAvailable@(item.Id)').hide();
+                                    $('#btnEditOrderItem@(item.Id)').show();
+                                    $('#btnDeleteMedicineRequestItem@(item.Id)').show();
+                                    $('#btnSaveMedicineRequestItem@(item.Id)').hide();
+                                    $('#btnCancelOrderItem@(item.Id)').hide();
+                                      }
+                                      }
+                            </script>
+                        }
+                        <table class="table table-hover table-bordered">
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.MedicineRequestID")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.MedicineName")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.Quantity")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.UnitPrice")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.TotalAmount")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.ProductID")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Medicine.MedicineRequestItem.Fields.IsAvailable")
+                                    </th>
+                                    <th>
+                                        @T("Admin.Common.Edit")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td style="width: 15%;" class="text-left">
+
+                                            @if ((item.MedicineRequestID) != 0)
+                                            {
+                                                <p>
+                                                    @Html.Raw(item.MedicineRequestID)
+                                                </p>
+                                            }
+
+                                        </td>
+
+                                        <td style="width: 15%;" class="text-left">
+                                            @if (!string.IsNullOrEmpty(item.MedicineName))
+                                            {
+                                                <p>
+                                                    @Html.Raw(item.MedicineName)
+                                                </p>
+                                            }
+                                            <div id="pnlEditPvPrice@(item.Id)">
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        @T("Admin.Medicine.MedicineRequestItem.Fields.MedicineName")
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input name="pvPriceInclTax@(item.Id)" type="text" value="@item.MedicineName" id="pvPriceInclTax@(item.Id)" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <td style="width: 15%;" class="text-left">
+                                            @if ((item.Quantity) != 0)
+                                            {
+                                                <p>
+                                                    @Html.Raw(item.Quantity)
+                                                </p>
+                                            }
+                                            <div id="pnlEditPvQuantity@(item.Id)">
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        @T("Admin.Medicine.MedicineRequestItem.Fields.Quantity")
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input name="PvQuantity@(item.Id)" type="text" value="@item.Quantity" id="PvQuantity@(item.Id)" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <td style="width: 15%;" class="text-left">
+                                            <p>
+                                                @Html.Raw(item.UnitPrice)
+                                            </p>
+                                            <div id="pnlEditPvDiscount@(item.Id)">
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        @T("Admin.Medicine.MedicineRequestItem.Fields.UnitPrice")
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input name="PvDiscount@(item.Id)" type="text" value="@item.UnitPrice" id="PvDiscount@(item.Id)" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <td style="width: 15%;" class="text-left">
+                                            <p>
+                                                @Html.Raw(item.TotalAmount)
+                                            </p>
+
+                                        </td>
+
+                                        <td style="width: 15%;" class="text-left">
+                                            @if (!string.IsNullOrEmpty(item.ProductID))
+                                            {
+                                            <p>
+                                                @{
+                                                    var res = item.AvailableMedicineProduct.Where(x => x.Value == item.ProductID).FirstOrDefault();
+                                                    if (res != null)
+                                                    {
+                                                        @Html.Raw(res.Text);
+                                                    }
+
+                                                }
+
+
+                                            </p>
+                                            }
+                                            <div id="pnlEditPvUnitPrice@(item.Id)">
+                                                <div class="form-group">
+                                                    @*<div class="col-md-5">
+                                                            @T("Admin.Medicine.MedicineRequestItem.Fields.ProductID")
+                                                        </div>*@
+
+                                                    <div id="@("item_"+item.Id)" class="col-md-12">
+                                                        @{
+                                                            List<SelectListItem> listItems = new List<SelectListItem>();
+
+                                                            foreach (var items in item.AvailableMedicineProduct)
+                                                            {
+
+                                                                listItems.Add(new SelectListItem
+                                                                {
+                                                                    Text = items.Text,
+                                                                    Value = items.Value,
+                                                                    Selected = (items.Value.ToString() == item.ProductID) ? true : false
+                                                                });
+
+                                                            }
+                                                            @Html.DropDownList("dropdown_" + item.Id, new SelectList(listItems, "Value", "Text"))
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td style="width: 15%;" class="text-left">
+
+                                            <p>
+                                                @if (item.IsAvailable)
+                                                {
+                                                    <i class="fa fa-check true-icon"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-close false-icon"></i>
+                                                }
+
+                                            </p>
+                                            <div id="pnlEditIsAvailable@(item.Id)">
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        @T("Admin.Medicine.MedicineRequestItem.Fields.IsAvailable")
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input name="IsAvailable@(item.Id)" type="checkbox" checked="@item.IsAvailable" value="@item.IsAvailable" id="IsAvailable@(item.Id)" class="form-check-input" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td style="width: 15%;" class="text-center">
+                                            <button type="submit" class="btn btn-default" name="btnEditOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(true);return false;" id="btnEditOrderItem@(item.Id)">
+                                                <i class="fa fa-pencil"></i>
+                                                @T("Admin.Common.Edit")
+                                            </button>
+                                            <button type="submit" class="btn btn-default" name="btnDeleteMedicineRequestItem@(item.Id)" id="btnDeleteMedicineRequestItem@(item.Id)">
+                                                <i class="fa fa-trash"></i>
+                                                @T("Admin.Common.Delete")
+                                            </button>
+                                            <nop-action-confirmation asp-button-id="@("btnDeleteMedicineRequestItem" + item.Id)" />
+                                            <button type="submit" class="btn btn-default" name="btnSaveMedicineRequestItem@(item.Id)" id="btnSaveMedicineRequestItem@(item.Id)" style="display: none;">
+                                                <i class="fa fa-floppy-o"></i>
+                                                @T("Admin.Common.Save")
+                                            </button>
+                                            <nop-action-confirmation asp-button-id="@("btnSaveMedicineRequestItem" + item.Id)" />
+                                            <button type="submit" class="btn btn-default" name="btnCancelOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(false);return false;" id="btnCancelOrderItem@(item.Id)" style="display: none;">
+                                                <i class="fa fa-close"></i>
+                                                @T("Admin.Common.Cancel")
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-12">
+
+                    <button type="submit" id="btnAddNewProduct" name="btnAddNewProduct" onclick="javascript:setLocation('@(Url.Action("AddMedicineRequsetItem", "MedicineRequest", new {medicineRequestId = @ViewData["MedicineRequestID"].ToString()}))'); return false;" class="btn btn-primary">
+                        @T("Admin.Medicine.AddMedicineRequsetItem")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsProductsBottom, additionalData = Model })
+</div>

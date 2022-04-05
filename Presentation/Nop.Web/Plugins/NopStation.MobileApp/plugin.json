@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopStation",
+  "FriendlyName": "MobileApp",
+  "SystemName": "NopStation.MobileApp",
+  "Version": "1.10",
+  "SupportedVersions": [ "4.10" ],
+  "Author": "Nop-Station Team, BrainStation-23",
+  "DisplayOrder": 1,
+  "FileName": "BS.Plugin.NopStation.MobileApp.dll",
+  "Description": "Push notification for  nopStation mobile app"
+}

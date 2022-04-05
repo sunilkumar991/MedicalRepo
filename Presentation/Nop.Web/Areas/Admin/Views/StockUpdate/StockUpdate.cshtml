@@ -1,0 +1,54 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.StockUpate").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Stock Update");
+}
+<form asp-controller="StockUpdate" asp-action="StockUpdate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.StockUpate")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsTop })
+                pdf-logo-picture
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @*<nop-override-store-checkbox asp-for="PdfSettings.LogoPictureId_OverrideForStore" asp-parent-container="pdf-logo-picture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.LogoPictureId" />*@
+                                Updload Excel
+
+                            </div>
+                            <div class="col-md-9" id="pdf-logo-picture">
+                                @*<nop-editor asp-for="PdfSettings.LogoPictureId" />
+                                <span asp-validation-for="PdfSettings.LogoPictureId"></span>*@
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsBottom })
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,12 @@
+﻿{
+  "DataProvider": "sqlserver",
+  //"DataConnectionString": "Data Source=192.168.30.187;Initial Catalog=VMART1.1;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=sa#123",
+  "DataConnectionString": "Data Source=103.47.184.244;Initial Catalog=OneStopKitchenRajesh;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=okdollar@1234!@#$",
+  //"DataConnectionString": "Data Source=65.1.129.74;Initial Catalog=OneStopKitchenRajesh;Integrated Security=False; Connect Timeout=120; Persist Security Info=False;User ID=sa;Password=aq1!sw2@A",
+  //"DataConnectionString": "Data Source=DESKTOP-08IT1D7\\MSSQLSERVER01;Initial Catalog=OneStopKitchenRajesh;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=aq1!sw2@A",
+  //"DataConnectionString": "Data Source=103.47.184.244;Initial Catalog=OneStopKitchenRajesh;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=okdollar@1234!@#$",
+  //"DataConnectionString": "Data Source=69.160.4.149;Initial Catalog=24ZAY-DEV;Integrated Security=False;Persist Security Info=False;User ID=sa;Password=asd123!@#",
+  //"DataConnectionString": "Data Source=13.250.232.30;Initial Catalog=24ZAY;Integrated Security=False;Persist Security Info=False;User ID=24zay-DB;Password=24zay@123!@#",
+
+  "RawDataSettings": {}
+}

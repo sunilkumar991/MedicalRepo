@@ -1,0 +1,56 @@
+@model IEnumerable<MedicineRequestItemModel>
+@inject IEventPublisher eventPublisher
+@{
+    //page title
+    ViewBag.Title = T("Admin.Medicine.EditMedicineRequestDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Medicine Request");
+
+}
+<form asp-controller="MedicineRequest" asp-action="Edit" method="post" id="order-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Medicine.EditMedicineRequestDetails")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Medicine.BackToMedicineRequestList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            @*<span id="order-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>*@
+            <input type="submit" id="btnRefreshPage" style="display: none" />
+            <script>
+                $(document).ready(function () {
+                    $('#btnRefreshPage').click(function () {
+                        //refresh pageed
+                        location.reload();
+                    });
+                });
+            </script>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    <div asp-validation-summary="All"></div>
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="order-edit">
+
+                <nop-tab asp-name="tab-products" asp-title="@T("Admin.Medicine.EditMedicineRequestDetails")" asp-default="true">@await Html.PartialAsync("MedicineRequestItem", Model)</nop-tab>
+
+            </nop-tabs>
+        </div>
+    </div>
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>
+@*<nop-delete-confirmation asp-model-id="@Model" asp-button-id="order-delete" />*@

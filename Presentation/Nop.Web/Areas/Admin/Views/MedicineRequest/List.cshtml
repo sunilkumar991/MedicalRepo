@@ -1,0 +1,326 @@
+﻿
+@model MedicineRequestSearchModel
+@using Nop.Services.Stores
+@using System.Text.Encodings.Web
+@inject IStoreService storeService
+@{
+    var stores = storeService.GetAllStores();
+
+    //page title
+    ViewBag.Title = T("Admin.Medicine.MedicineRequest").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Medicine Request");
+}
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Medicine.MedicineRequest")
+    </h1>
+    <div class="pull-right">
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Medicine.MedicineRequest.DeleteSelected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewListButtons })
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="PatientName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="PatientName" />
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="PatientName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="PatientName" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="RequestStatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="RequestStatusId" asp-items="Model.AvailableRequestStatus" />
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="medicinerequest-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#medicinerequest-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "MedicineRequest"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: function() {
+                                                var data = {
+                                                    PatientName: $('#@Html.IdFor(model => model.PatientName)').val(),
+                                                    RequestStatusId: $('#@Html.IdFor(model => model.RequestStatusId)').val()
+                                                };
+                                                addAntiForgeryToken(data);
+                                                return data;
+                                            }
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("MedicineRequestUpdate", "MedicineRequest"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Id: { editable: false, type: "number"  },
+                                                PatientName: { editable: false, nullable: true },
+                                                CustomerName: { editable: false, nullable: true },
+                                                Remarks: { editable: false, nullable: true },
+                                                MobileNumber: { editable: false, nullable: true },
+                                                PrescriptionImageUrl: { editable: false, nullable: true },
+                                                RequestStatusId: { editable: true, type: "number"},
+                                                RequestStatus: { editable: true, type: "string"},
+                                                RejectedReason: { editable: true, type: "string"}
+                                            }
+                                        },
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(Model.PageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(Model.AvailablePageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                dataBound: onDataBound,
+                                columns: [
+                                    {
+                                        field: "Id",
+                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                        width: 50
+                                    },
+                                    {
+                                        field: "PatientName",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.PatientName")",
+                                        width: 200
+                                    },
+                                    {
+                                        field: "CustomerName",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.CustomerName")",
+                                        width: 200
+                                    },
+
+                                    {
+                                        field: "RejectedReason",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.RejectedReason")",
+                                        width: 200
+                                    },
+                                    {
+                                        field: "RequestStatusId",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.RequestStatus")",
+                                        width: 200,
+                                        editor: requestStatusDropDownEditor,
+                                        template: "#:RequestStatus#"
+                                    }
+                                    ,
+                                    {
+                                        field: "Remarks",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.Remarks")",
+                                        width: 400,
+                                        encoded: false
+                                    }
+                                    ,
+                                    {
+                                        field: "MobileNumber",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.MobileNumber")",
+                                        width: 200,
+                                        encoded: false
+                                    }
+                                    ,
+                                    {
+                                        field: "PrescriptionImageUrl",
+                                        title: "@T("Admin.Medicine.MedicineRequest.Fields.PrescriptionImageUrl")",
+                                        template: '<img src="#=PrescriptionImageUrl#" width=150px height=200px />',
+                                        width: 200
+                                    }
+                                    ,
+                                    {
+                                       field: "Id",
+                                       title: "@T("Admin.Medicine.AddOrEditMedicine")",
+                                       width: 400,
+                                       headerAttributes: { style: "text-align:center" },
+                                       attributes: { style: "text-align:center" },
+                                       template: '<a class="btn btn-default" href="Edit/#=Id#">@T("Admin.Medicine.AddOrEditMedicine")</a>',
+                                    },
+                                    { command: ["edit"], title: "&nbsp;", width: "250px" }
+                                ], editable: "inline"
+                            });
+                        });
+
+                        //local datasource
+                        var allStatus = [
+                                {
+                                    Id: 10,
+                                    Name: "Pending"
+                                },
+                                {
+                                    Id: 20,
+                                    Name: "Approved"
+                                },
+                                {
+                                    Id: 30,
+                                    Name: "Rejected"
+                                }
+                        ];
+
+                        function requestStatusDropDownEditor(container, options) {
+                            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:RequestStatusId"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                        autoBind: false,
+                                    dataSource: allStatus
+                                });
+                                }
+                    </script>
+                    <script>
+                        var selectedIds = [];
+                        $(document).ready(function() {
+                            //search button
+                            $('#search-productreviews').click(function() {
+                                        //search
+                                        var grid = $('#medicinerequest-grid').data('kendoGrid');
+                                        grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                //clear selected checkboxes
+                                $('.checkboxGroups').attr('checked', false).change();
+                                        selectedIds = [];
+                                        return false;
+                                    });
+
+                            //"delete selected" button
+                            $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                                        var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                    addAntiForgeryToken(postData);
+                                $.ajax({
+                                        cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "MedicineRequest"))",
+                                    data: postData,
+                                    complete: function (data) {
+                                            //reload grid
+                                            var grid = $('#medicinerequest-grid').data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                            alert(thrownError);
+                                        }
+                                    });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                    return false;
+                                });
+
+                            $('#mastercheckbox').click(function() {
+                                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                                });
+
+                            //wire up checkboxes.
+                            $('#medicinerequest-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
+                                    var $check = $(this);
+                                    if ($check.is(":checked") == true) {
+                                        var checked = jQuery.inArray($check.val(), selectedIds);
+                                        if (checked == -1) {
+                                            //add id to selectedIds.
+                                            selectedIds.push($check.val());
+                                        }
+                                        } else {
+                                            var checked = jQuery.inArray($check.val(), selectedIds);
+                                            if (checked > -1) {
+                                                //remove id from selectedIds.
+                                                selectedIds = $.grep(selectedIds, function(item, index) {
+                                                    return item != $check.val();
+                                                });
+                                            }
+                                            }
+                                            updateMasterCheckbox();
+                                        });
+                                    });
+
+                                    function onDataBound(e) {
+
+                            $('#medicinerequest-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
+                                            var currentId = $(this).val();
+                                            var checked = jQuery.inArray(currentId, selectedIds);
+                                //set checked based on if current checkbox's value is in selectedIds.
+                                $(this).attr('checked', checked > -1);
+                                            });
+
+                                    updateMasterCheckbox();
+                                }
+
+                                function updateMasterCheckbox() {
+                                    var numChkBoxes = $('#medicinerequest-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                                    var numChkBoxesChecked = $('#medicinerequest-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                                }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

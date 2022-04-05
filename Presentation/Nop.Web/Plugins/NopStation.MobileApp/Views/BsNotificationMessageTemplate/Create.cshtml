@@ -1,0 +1,38 @@
+﻿@using Nop.Web.Framework;
+@model BS.Plugin.NopStation.MobileApp.Models.NotificationMessageTemplateModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails").Text;
+    Html.SetActiveMenuItemSystemName("Mobile Notification App Create Message Template");
+}
+@{Layout = "_AdminLayout";}
+
+<form asp-controller="BsNotificationMessageTemplate" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List" asp-controller="BsNotificationMessageTemplate" asp-area="Admin">@T("Admin.ContentManagement.MessageTemplates.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="submit" name="message-template-copy" class="btn bg-blue" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.ContentManagement.MessageTemplates.Copy")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/NopStation.MobileApp/Views/BsNotificationMessageTemplate/_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="message-template-delete" />
+

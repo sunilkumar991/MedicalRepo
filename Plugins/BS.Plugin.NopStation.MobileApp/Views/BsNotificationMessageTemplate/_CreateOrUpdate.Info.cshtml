@@ -1,0 +1,139 @@
+﻿@using Nop.Core.Infrastructure
+@using BS.Plugin.NopStation.MobileApp.Models
+@using Nop.Services.Events
+@using Nop.Web.Framework.Events
+@using Nop.Web.Framework
+@model NotificationMessageTemplateModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AllowedTokens" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="AllowedTokens" />
+                    <span asp-validation-for="AllowedTokens"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsActive" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsActive" />
+                    <span asp-validation-for="IsActive"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@(Html.LocalizedEditor<NotificationMessageTemplateModel, NotificationMessageTemplateLocalizedModel>("messagetemplate-localized",
+                @<div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Locales[item].Subject" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="Locales[item].Subject" />
+                                    <span asp-validation-for="Locales[item].Subject"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="Locales[item].Body" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea asp-for="Locales[item].Body" />
+                                    <span asp-validation-for="Locales[item].Body"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <input asp-for="Locales[item].LanguageId" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                ,
+                                @<div class="panel-group">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="Subject" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-editor asp-for="Subject" />
+                                                    <span asp-validation-for="Subject"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-3">
+                                                    <nop-label asp-for="Body" />
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <nop-textarea asp-for="Body" />
+                                                    <span asp-validation-for="Body"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                    ))
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AttachedDownloadId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="HasAttachedDownload" />
+                    <span asp-validation-for="HasAttachedDownload"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AttachedDownloadId" />
+                    <span asp-validation-for="AttachedDownloadId"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+            toggleHasAttachedDownload();
+        });
+
+        function toggleHasAttachedDownload() {
+            if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
+                $('#pnlAttachedDownload').show();
+            }
+            else {
+                $('#pnlAttachedDownload').hide();
+            }
+        }
+
+</script>

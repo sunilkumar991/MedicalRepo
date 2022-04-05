@@ -1,0 +1,191 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Copyright>Copyright © BrainStation-23, Ltd</Copyright> 
+    <Company>BrainStation-23, Ltd</Company> 
+    <Authors>BrainStation-23, Ltd</Authors> 
+    <Version>1.00</Version> 
+    <Description>Web api</Description> 
+    <PackageLicenseUrl></PackageLicenseUrl> 
+    <AssemblyVersion>1.0.0.0</AssemblyVersion> 
+    <FileVersion>1.0.0.0</FileVersion> 
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects> 
+    <ApplicationIcon /> 
+    <OutputType>Library</OutputType> 
+    <StartupObject /> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Notification\**" />
+    <Compile Remove="Models\_QueryModel\DeliveryBoy\**" />
+    <Compile Remove="Views\WidgetsBsLiveChat\**" />
+    <EmbeddedResource Remove="Models\Notification\**" />
+    <EmbeddedResource Remove="Models\_QueryModel\DeliveryBoy\**" />
+    <EmbeddedResource Remove="Views\WidgetsBsLiveChat\**" />
+    <None Remove="Models\Notification\**" />
+    <None Remove="Models\_QueryModel\DeliveryBoy\**" />
+    <None Remove="Views\WidgetsBsLiveChat\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\_QueryModel\Customer\VerifyMobileNumberRequest.cs" />
+    <Compile Remove="Models\_ResponseModel\Customer\VerifyMobileNumberResponse.cs" />
+    <Compile Remove="Services\IQueuedNotificationApiService.cs" />
+    <Compile Remove="Services\QueuedNotificationApiService.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\NopStation.MobileWebApi\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <DefineConstants>TRACE;DEBUG;RELEASE;NET461</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\NopStation.MobileWebApi\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo.jpg"> 
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content\IconPackage\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\IconPackage\defaultIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\arrow.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\cross.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\hs.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\hv.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\jscolor.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\InstagramAllUserList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\InstagramAllVendorList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\InstagramOfferCreate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\InstagramOfferList.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\InstagramVendorCreate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\BsInstagramAdMarket\OfferDetails.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\BannerSlider.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\CategoryIcons.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\ContactInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\ContentManagement.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\Create.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\Edit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\FeaturedProductsAddPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\GeneralSetting.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\MobileWebSiteSetting.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\NstSettings.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\NstSettingsEdit.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\SliderImage.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\Theme.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\_CreateOrUpdate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\WebApi\_NopMobileMenu.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
+    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
+    <ProjectReference Include="..\Nop.Plugin.Payments.OKDollar\Nop.Plugin.Payments.OKDollar.csproj" />
+  </ItemGroup>  
+  <ItemGroup>
+    <Reference Include="BraintreeHttp-Dotnet">
+      <HintPath>dll\BraintreeHttp-Dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>dll\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="Source">
+      <HintPath>dll\PayPal.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+
+</Project>
+
