@@ -115,8 +115,8 @@ namespace Nop.Services.Directory
                         .ToList();
                 }
 
-                //return countries.Where(c => c.Name.ToString().ToLower() == "india").ToList(); //Select only myanmar country changed by ankur on 28-AUG-2018
-                return countries.Where(c => c.Name.ToString().ToLower() == "myanmar").ToList(); //Select only myanmar country changed by ankur on 28-AUG-2018
+                return countries.Where(c => c.Name.ToString().ToLower() == "india").ToList(); //Select only myanmar country changed by ankur on 28-AUG-2018
+                //return countries.Where(c => c.Name.ToString().ToLower() == "myanmar").ToList(); //Select only myanmar country changed by ankur on 28-AUG-2018
             });
         }
 
